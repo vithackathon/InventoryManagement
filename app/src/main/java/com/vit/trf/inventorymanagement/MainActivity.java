@@ -106,6 +106,8 @@ public class MainActivity extends AppCompatActivity {
                             if(user.isEmailVerified()) {
                                 alertDialog.dismiss();
                                 Toast.makeText(MainActivity.this, "Hello user signed in", Toast.LENGTH_SHORT).show();
+                                Intent i = new Intent(MainActivity.this,Home.class);
+                                startActivity(i);
                             }
                             else
                             {
