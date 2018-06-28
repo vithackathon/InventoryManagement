@@ -33,6 +33,18 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            // User is signed in
+            Intent i = new Intent(MainActivity.this, Home.class);
+            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(i);
+        } else {
+            // User is signed out
+            Log.d(TAG, "onAuthStateChanged:signed_out");
+        }
+
         textView_link_signup=(TextView)findViewById(R.id.link_signup);
         button_Signin=(Button)findViewById(R.id.btn_login);
         alertDialog= new SpotsDialog.Builder().setContext(MainActivity.this).build();
@@ -107,7 +119,9 @@ public class MainActivity extends AppCompatActivity {
                                 alertDialog.dismiss();
                                 Toast.makeText(MainActivity.this, "Hello user signed in", Toast.LENGTH_SHORT).show();
                                 Intent i = new Intent(MainActivity.this,Home.class);
+                                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                 startActivity(i);
+
                             }
                             else
                             {

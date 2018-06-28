@@ -2,6 +2,8 @@ package com.vit.trf.inventorymanagement;
 
 import android.animation.Animator;
 import android.content.Intent;
+import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
@@ -10,8 +12,12 @@ import android.view.ViewAnimationUtils;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
+
 public class Home extends AppCompatActivity implements View.OnClickListener{
-    CardView borrowCard,returnCard,addCard,settingCard,wifiCard ;
+    CardView borrowCard,returnCard,addCard,signOutCard,wifiCard ;
     Intent i ;
     LinearLayout ll;
     @Override
@@ -22,15 +28,36 @@ public class Home extends AppCompatActivity implements View.OnClickListener{
         borrowCard = (CardView) findViewById(R.id.borrow);
         returnCard = (CardView) findViewById(R.id.returnID);
         addCard = (CardView) findViewById(R.id.add);
-        settingCard = (CardView) findViewById(R.id.links);
+        signOutCard = (CardView) findViewById(R.id.signOut);
         wifiCard = (CardView) findViewById(R.id.wifi);
 
         borrowCard.setOnClickListener(this);
         returnCard.setOnClickListener(this);
         addCard.setOnClickListener(this);
-        settingCard.setOnClickListener(this);
+        signOutCard.setOnClickListener(this);
         wifiCard.setOnClickListener(this);
 
+    }
+
+    boolean doubleBackToExitPressedOnce = false;
+
+    @Override
+    public void onBackPressed() {
+        if (doubleBackToExitPressedOnce) {
+            super.onBackPressed();
+            return;
+        }
+
+        this.doubleBackToExitPressedOnce = true;
+        Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
+
+        new Handler().postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                doubleBackToExitPressedOnce=false;
+            }
+        }, 2000);
     }
 
     @Override
@@ -38,12 +65,17 @@ public class Home extends AppCompatActivity implements View.OnClickListener{
 
         switch (v.getId()){
             case R.id.borrow :
-                Toast.makeText(this, "bank", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(this,BorrowActivity.class));
                 break;
 
             case R.id.returnID:
-                Toast.makeText(this, "ideas", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(this,ReturnActivity.class));
+                break;
+
+            case R.id.signOut:
+                FirebaseAuth.getInstance().signOut();
+                startActivity(new Intent(this,MainActivity.class));
+                finish();
                 break;
 
         }

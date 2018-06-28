@@ -15,16 +15,19 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
-public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolders> {
+
+public class RecyclerViewAdapterReturn extends RecyclerView.Adapter<RecyclerViewHolders>{
+
     private List<Task> task;
     DatabaseReference m_objFireBaseRef  = FirebaseDatabase.getInstance().getReference();
     DatabaseReference objRef = m_objFireBaseRef.child("allitems");
     DatabaseReference borrowedRef = m_objFireBaseRef.child(FirebaseAuth.getInstance().getCurrentUser().getUid()+"/Borrowed");
     int quantityBorrowed=0;
+    int quantityAvailable=0;
 
 
     protected Context context;
-    public RecyclerViewAdapter(Context context, List<Task> task) {
+    public RecyclerViewAdapterReturn(Context context, List<Task> task) {
         this.task = task;
         this.context = context;
     }
@@ -43,20 +46,46 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder builder;
-               // if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    builder = new AlertDialog.Builder(context, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT);
+                // if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                builder = new AlertDialog.Builder(context, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT);
                 //} else {
-                    //builder = new AlertDialog.Builder(context);
-               // }
-                builder.setTitle("Borrow Item")
-                        .setMessage("Are you sure you want to borrow this item?")
+                //builder = new AlertDialog.Builder(context);
+                // }
+                builder.setTitle("Return Item")
+                        .setMessage("Are you sure you want to return this item?")
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 // continue with borrow
-                               final String substr=holder.itemButton.getText().toString().substring(0,holder.itemButton.getText().toString().indexOf(":")).trim();
+                                final String substr=holder.itemButton.getText().toString().substring(0,holder.itemButton.getText().toString().indexOf(":")).trim();
                                 int quantity = Integer.parseInt(holder.itemButton.getText().toString().substring(holder.itemButton.getText().toString().indexOf(":")+2,holder.itemButton.getText().toString().length()));
 
-                                objRef.child(substr).setValue(quantity-1);
+                                objRef.child(substr).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        try {
+                                            if (dataSnapshot.getValue() != null) {
+                                                try {
+                                                    quantityAvailable = Integer.parseInt(dataSnapshot.getValue().toString());// your name values you will get here
+                                                } catch (Exception e) {
+                                                    e.printStackTrace();
+                                                }
+                                            } else {
+                                                //Log.e("TAG", " it's null.");
+                                                quantityAvailable=0;
+
+                                            }
+                                            objRef.child(substr).setValue(quantityAvailable+1);
+
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
+                                    }
+                                });
 
                                 borrowedRef.child(substr).addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
@@ -65,7 +94,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
                                         try {
                                             if (snapshot.getValue() != null) {
                                                 try {
-                                                   quantityBorrowed = Integer.parseInt(snapshot.getValue().toString());// your name values you will get here
+                                                    quantityBorrowed = Integer.parseInt(snapshot.getValue().toString());// your name values you will get here
                                                 } catch (Exception e) {
                                                     e.printStackTrace();
                                                 }
@@ -74,7 +103,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
                                                 quantityBorrowed=0;
 
                                             }
-                                            borrowedRef.child(substr).setValue(quantityBorrowed+1);
+                                            borrowedRef.child(substr).setValue(quantityBorrowed-1);
 
                                         } catch (Exception e) {
                                             e.printStackTrace();
@@ -89,7 +118,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
                                 });
 
 
-                                }
+                            }
                         })
                         .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
