@@ -35,16 +35,20 @@ public class Home extends AppCompatActivity implements View.OnClickListener{
 
     @Override
     public void onClick(View v) {
-        Intent i;
 
         switch (v.getId()){
             case R.id.borrow :
                 Toast.makeText(this, "bank", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(this,BorrowActivity.class));
                 break;
 
             case R.id.returnID:
                 Toast.makeText(this, "ideas", Toast.LENGTH_SHORT).show();
                 break;
+
         }
+
+
+
     }
 }
