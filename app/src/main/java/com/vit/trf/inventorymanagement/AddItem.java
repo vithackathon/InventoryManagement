@@ -19,8 +19,8 @@ import java.util.Map;
 
 public class AddItem extends AppCompatActivity {
 
-    EditText et1,et2,et3;
-    Button b1,b2;
+    EditText et1,et2,et3,et4,et5;
+    Button b1,b2,b3;
 
     //private FirebaseDatabase database ;
     //private DatabaseReference databaseReference;
@@ -39,8 +39,11 @@ public class AddItem extends AppCompatActivity {
         et1 = (EditText)findViewById(R.id.itemname);
         et2 = (EditText)findViewById(R.id.itemquantity);
         et3 = (EditText)findViewById(R.id.removename);
+        et4 = (EditText)findViewById(R.id.itemnamechange);
+        et5 = (EditText)findViewById(R.id.itemquantitychange);
         b1 = (Button)findViewById(R.id.additem);
         b2 = (Button)findViewById(R.id.removeitem);
+        b3 = (Button)findViewById(R.id.changeitem);
 
 
         b1.setOnClickListener(new View.OnClickListener() {
@@ -52,15 +55,6 @@ public class AddItem extends AppCompatActivity {
                 final int q;
                 name=et1.getText().toString();
                 q=Integer.parseInt(et2.getText().toString());
-
-          /*  Map<String, String> userData = new HashMap<String, String>();
-
-            userData.put(name, q);
-            myRef.push().setValue(userData);
-                //myRef.child(name).push().setValue(q);
-            //  DatabaseReference childDBR = myRef.child(name);
-            //childDBR.child("quantity").setValue(q);*/
-
 
 
             objRef.child(name).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -104,22 +98,105 @@ public class AddItem extends AppCompatActivity {
             }
         });
 
-      /*  b2.setOnClickListener(new View.OnClickListener() {
+       b2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-
                 try{
-                    String name;
+                    final String name;
+
                     name=et3.getText().toString();
 
-                    DatabaseReference childDBR = myRef.child(name);
 
-                    childDBR.removeValue();
-                }catch (Exception e){}
+
+                    objRef.child(name).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot snapshot) {
+                            int quantity=0;
+                            try {
+
+                                objRef.child(name).removeValue();//setValue(quantity);
+                                Toast.makeText(AddItem.this, "Item Deleted", Toast.LENGTH_SHORT).show();
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                Toast.makeText(AddItem.this, "Exception "+e, Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+
+                    });
+                }
+                catch (Exception e){
+                    Toast.makeText(AddItem.this, "Exception "+e, Toast.LENGTH_SHORT).show();
+
+                }
 
 
             }
-        });*/
+        });
+
+
+       b3.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View view) {
+               try{
+                   final String name;
+                   final int q;
+                   name=et4.getText().toString();
+                   q=Integer.parseInt(et5.getText().toString());
+
+
+                   objRef.child(name).addListenerForSingleValueEvent(new ValueEventListener() {
+                       @Override
+                       public void onDataChange(DataSnapshot snapshot) {
+                           int quantity=0;
+                           try {
+                               if (snapshot.getValue() != null) {
+                                   try {
+                                       quantity = q;
+
+                                   } catch (Exception e) {
+                                       e.printStackTrace();
+                                   }
+                               } else {
+                                   //Log.e("TAG", " it's null.");
+                                   quantity = q;
+
+                               }
+
+                               if(snapshot.exists()) {
+                                   objRef.child(name).setValue(quantity);
+                                   Toast.makeText(AddItem.this, "Item changed", Toast.LENGTH_SHORT).show();
+                               }
+                               else
+                               {
+                                   Toast.makeText(AddItem.this, "Item not present", Toast.LENGTH_SHORT).show();
+                               }
+
+                           } catch (Exception e) {
+                               e.printStackTrace();
+                           }
+                       }
+
+                       @Override
+                       public void onCancelled(DatabaseError databaseError) {
+
+                       }
+
+                   });
+               }
+               catch (Exception e){
+                   Toast.makeText(AddItem.this, "Exception "+e, Toast.LENGTH_SHORT).show();
+
+               }
+
+
+           }
+       });
     }
 }

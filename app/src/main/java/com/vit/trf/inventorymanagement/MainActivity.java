@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
         textView_forgot_password.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(MainActivity.this,ResetPasswordActivity.class));
+                startActivity(new Intent(MainActivity.this,ForgotPasswordActivity.class));
             }
         });
     }

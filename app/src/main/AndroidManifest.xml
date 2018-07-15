@@ -9,24 +9,25 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <activity android:name=".SignupActivity" />
         <activity android:name=".ResetPasswordActivity" />
         <activity android:name=".Home" />
         <activity android:name=".BorrowActivity" />
         <activity android:name=".ReturnActivity" />
-        <activity android:name=".MainActivity"></activity>
+        <activity android:name=".MainActivity" />
         <activity android:name=".AdminVerify" />
-
-
-
         <activity android:name=".AddItem">
+        </activity>
+        <activity android:name=".LauncherActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
+
+        <activity android:name=".ForgotPasswordActivity"/>
     </application>
 
 </manifest>
