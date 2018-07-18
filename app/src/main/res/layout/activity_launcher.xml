@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -9,17 +9,24 @@
 
     <Button
         android:id="@+id/user"
+
         android:layout_width="174dp"
         android:layout_height="wrap_content"
-        android:text="User"
-         />
+        android:layout_alignStart="@+id/admin"
+        android:layout_centerVertical="true"
+        android:backgroundTint="@color/colorAccent"
+        android:text="User" />
 
 
     <Button
         android:id="@+id/admin"
         android:layout_width="181dp"
         android:layout_height="wrap_content"
-        android:text="Admin"
-         />
+        android:layout_above="@+id/user"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="42dp"
+        android:backgroundTint="@color/colorAccent"
 
-</LinearLayout>
+        android:text="Admin" />
+
+</RelativeLayout>

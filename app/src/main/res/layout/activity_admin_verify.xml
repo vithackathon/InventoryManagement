@@ -35,6 +35,7 @@ android:id="@+id/passwd"
         android:layout_gravity="center"
         android:text="confirm"
         android:id="@+id/confirm"
+        android:backgroundTint="@color/colorAccent"
         />
 
 </LinearLayout>
