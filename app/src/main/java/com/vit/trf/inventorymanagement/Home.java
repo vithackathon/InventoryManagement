@@ -17,7 +17,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class Home extends AppCompatActivity implements View.OnClickListener{
-    CardView borrowCard,returnCard,addCard,signOutCard,wifiCard ;
+    CardView borrowCard,returnCard,signOutCard ;
     Intent i ;
     LinearLayout ll;
     @Override
@@ -27,15 +27,11 @@ public class Home extends AppCompatActivity implements View.OnClickListener{
         ll = (LinearLayout) findViewById(R.id.ll);
         borrowCard = (CardView) findViewById(R.id.borrow);
         returnCard = (CardView) findViewById(R.id.returnID);
-        addCard = (CardView) findViewById(R.id.add);
         signOutCard = (CardView) findViewById(R.id.signOut);
-        wifiCard = (CardView) findViewById(R.id.wifi);
 
         borrowCard.setOnClickListener(this);
         returnCard.setOnClickListener(this);
-        addCard.setOnClickListener(this);
         signOutCard.setOnClickListener(this);
-        wifiCard.setOnClickListener(this);
 
     }
 

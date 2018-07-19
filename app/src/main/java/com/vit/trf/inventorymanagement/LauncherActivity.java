@@ -21,7 +21,7 @@ public class LauncherActivity extends AppCompatActivity {
         b1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(LauncherActivity.this, "clicked user", Toast.LENGTH_SHORT).show();
+
                 startActivity(new Intent(LauncherActivity.this,MainActivity.class));
             }
         });
@@ -29,7 +29,7 @@ public class LauncherActivity extends AppCompatActivity {
         b2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(LauncherActivity.this, "clicked admin", Toast.LENGTH_SHORT).show();
+
                 startActivity(new Intent(LauncherActivity.this,AdminVerify.class));
             }
         });
