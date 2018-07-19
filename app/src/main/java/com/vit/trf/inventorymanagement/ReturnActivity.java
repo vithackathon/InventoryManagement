@@ -28,7 +28,7 @@ public class ReturnActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_return);
-        allTask = new ArrayList<>();
+
         databaseReference = FirebaseDatabase.getInstance().getReference(FirebaseAuth.getInstance().getCurrentUser().getUid()+"/Borrowed");
 
 
@@ -48,6 +48,7 @@ public class ReturnActivity extends AppCompatActivity {
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
                 // taskDeletion(dataSnapshot);
+                getAllTask(dataSnapshot);
             }
             @Override
             public void onChildMoved(DataSnapshot dataSnapshot, String s) {
@@ -70,16 +71,28 @@ public class ReturnActivity extends AppCompatActivity {
         });
     }
     private void getAllTask(DataSnapshot dataSnapshot){
+        allTask = new ArrayList<>();
         allTask.clear();
+        int quantity=0;
+        int flag=0;
         for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
+            flag =1;
             String taskTitle = singleSnapshot.getKey();
-            int quantity = Integer.parseInt(singleSnapshot.getValue().toString());
-            if(quantity==0) continue;
+           try{  quantity = Integer.parseInt(singleSnapshot.getValue().toString());}catch (Exception e){
+               singleSnapshot.getRef().removeValue();
+           }
+            if(quantity==0){ singleSnapshot.getRef().removeValue(); continue; }
             String item = taskTitle+" : "+quantity;
             allTask.add(new com.vit.trf.inventorymanagement.Task(item));
             recyclerViewAdapter = new RecyclerViewAdapterReturn(ReturnActivity.this, allTask);
             recyclerView.setAdapter(recyclerViewAdapter);
+
         }
+        if(flag==0){
+            recyclerViewAdapter = new RecyclerViewAdapterReturn(ReturnActivity.this, allTask);
+            recyclerView.setAdapter(recyclerViewAdapter);
+        }
+
     }
 
 }
